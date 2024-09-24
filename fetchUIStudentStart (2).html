@@ -13,7 +13,7 @@
 
 <body class="container">
 <h3>All Students</h3>
-<div style="height: 300px;overflow-y: scroll;">
+<div>
   <table class="table">
     <thead>
     <tr>
@@ -47,7 +47,8 @@
         <form>
           <div class="mb-3">
             <label for="input-name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="input-name">
+            <!--<input type="text" class="form-control" id="input-name">-->
+            <select id="input-name"></select>
           </div>
           <div class="mb-3">
             <label for="input-born-date" class="form-label">Born Date</label>
@@ -84,6 +85,12 @@
   const URLstudents = "http://localhost:8080/students"; //For when we meet in the class - remember to set server.port = 3333
   const URLstudent  = "http://localhost:8080/student"; //For when we meet in the class
 
+  const names =[
+          "martin",
+          "Lars",
+          "Morten",
+          "Tina"
+  ]
   function setUpHandlers() {
     document.getElementById("student-table-body").onclick = handleTableClick
     document.getElementById("btn-save").onclick = saveStudent
@@ -141,11 +148,25 @@
     })
   }
 
+
+
   function showModal(student) {
     const myModal = new bootstrap.Modal(document.getElementById('student-modal'))
     document.getElementById("modal-title").innerText = student.id ? "Edit Student" : "Add Student"
     document.getElementById("student-id").innerText = student.id
-    document.getElementById("input-name").value = student.name
+    //document.getElementById("input-name").value = student.name
+
+
+    let nameDropDown = document.getElementById("input-name")
+    let selectedText = ""
+    let htmlString = names.map(n => {
+      if (n === student.name){
+        selectedText = "Selected"
+      }else {
+        selectedText = ""
+      }
+      return `<option value="${n}" ${selectedText}>${n}</option>`})
+    nameDropDown.innerHTML = htmlString.join()
     document.getElementById("input-born-date").value = student.bornDate
     document.getElementById("input-born-time").value = student.bornTime
     myModal.show()
@@ -239,9 +260,10 @@
             <td>${s.name}</td>
             <td>${s.bornDate}</td>
             <td>${s.bornTime}</td>
-            <td><a data-id-delete=${s.id} href="#">Delete</a></td>
+
+            <td><a data-id-delete=${s.id} href="#" style="color: red">Delete</a></td>
             <!-- <td><a data-data-edit='${JSON.stringify(s)}' href="#">Edit</a></td> -->
-            <td><a data-id-edit='${s.id}' href="#">Edit</a></td>
+            <td><a data-id-edit='${s.id}' href="#" style="color: orange">Edit</a></td>
         </tr>
         `)
     document.getElementById("student-table-body").innerHTML = rows.join("")
